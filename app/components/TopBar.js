@@ -1,23 +1,23 @@
 import Link from 'next/link';
+import LangToggle from './LangToggle';
 
-export default function TopBar({ user }) {
+export default function TopBar({ user, t }) {
   return (
-    <header className="bar-top">
+    <nav className="ui-nav">
       <div className="inner">
-        <Link href="/admin" style={{ textDecoration: 'none' }}>
-          <span className="script" style={{ fontSize: 30 }}>
-            Paparazzi
-          </span>
+        <Link href="/admin" className="mark">
+          Paparazzi
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+        <div className="right">
           <span className="who">{user?.email}</span>
+          <LangToggle locale={t.code} other={t.other} otherLabel={t.otherLabel} />
           <form action="/api/auth/logout" method="post">
-            <button className="btn btn--quiet btn--auto" style={{ padding: '8px 14px', minHeight: 0, fontSize: 11 }}>
-              Odhlásiť
+            <button className="ui-btn ui-btn--plain" style={{ padding: '8px 10px', minHeight: 0 }}>
+              {t.nav.signOut}
             </button>
           </form>
         </div>
       </div>
-    </header>
+    </nav>
   );
 }

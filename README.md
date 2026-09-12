@@ -41,9 +41,25 @@ dvojíc. Botanické ozdoby zapnúť alebo vypnúť. Celý zoznam úloh foto misi
 vrátane poradia. A prepínače: galéria, premietanie, prijímanie videí,
 vyžadovanie mena.
 
-Jazyk ovládacích prvkov sa berie z prehliadača hosťa (slovenčina pre `sk`
-a `cs`, inak angličtina). Texty od organizátora sa neprekladajú, idú tak,
-ako ich napísal.
+QR kód je priamo v nastaveniach akcie, aj s tlačidlom na stiahnutie PNG
+v rozlíšení 1200 px na tlač. Generuje sa v prehliadači, takže adresa akcie
+neodchádza na cudzí server.
+
+## Jazyk
+
+Celá aplikácia je dvojjazyčná, slovensky a anglicky. Slovenčinu dostanú `sk`
+aj `cs`, všetko ostatné angličtinu.
+
+**Administrácia a úvodná stránka** sa rozhodujú na serveri z hlavičky
+`Accept-Language`, takže prvá vykreslená stránka príde už v správnom jazyku
+a text nepreblikne. Ručná voľba z prepínača v hlavičke sa uloží do cookie
+`pp_ui_lang` a má prednosť. Podľa toho istého sa nastavuje aj `<html lang>`.
+
+**Stránky pre hostí** sa riadia prehliadačom hosťa, nie organizátora, a majú
+vlastný prepínač v pätičke.
+
+Texty, ktoré napíše organizátor (nadpis, úlohy, poďakovanie), sa neprekladajú;
+idú tak, ako ich zadal.
 
 ---
 
@@ -109,6 +125,14 @@ npm run dev
 Do OAuth klienta pridaj aj `http://localhost:3000/api/auth/google/callback`.
 
 ---
+
+## Kompatibilita
+
+Sklenený vzhľad stojí na `backdrop-filter`. Kde chýba (starší Firefox,
+niektoré Androidy), `@supports` prepne plochy na hustejšie, aby text zostal
+čitateľný. `color-mix()`, `dvh` a `inset` majú pred sebou vždy záložný zápis,
+takže na starších prehliadačoch nevypadne farba ani výška. Kto má v systéme
+obmedzený pohyb, dostane všetko statické.
 
 ## Poznámky
 

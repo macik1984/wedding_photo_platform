@@ -2,6 +2,9 @@ import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/session';
 import { listEvents } from '@/lib/db';
 import { appUrl } from '@/lib/google';
+import { resolveLocale } from '@/lib/locale';
+import { tx } from '../ui-strings';
+import Backdrop from '../components/Backdrop';
 import TopBar from '../components/TopBar';
 import AdminClient from './AdminClient';
 
@@ -11,7 +14,9 @@ export default async function AdminPage() {
   const user = await currentUser();
   if (!user) redirect('/');
 
-  const events = await listEvents(user.id);
+  const [events, locale] = await Promise.all([listEvents(user.id), resolveLocale()]);
+  const t = tx(locale);
+
   let base = '';
   try {
     base = appUrl();
@@ -20,9 +25,10 @@ export default async function AdminPage() {
   }
 
   return (
-    <>
-      <TopBar user={user} />
-      <main className="wrap">
+    <div className="ui">
+      <Backdrop />
+      <TopBar user={user} t={t} />
+      <main className="ui-page">
         <AdminClient
           events={events.map((e) => ({
             id: e.id,
@@ -30,8 +36,10 @@ export default async function AdminPage() {
             settings: e.settings ?? {},
           }))}
           baseUrl={base}
+          locale={locale}
+          t={t.admin}
         />
       </main>
-    </>
+    </div>
   );
 }

@@ -7,23 +7,14 @@ import { useRouter } from 'next/navigation';
 function toSlug(input) {
   return String(input ?? '')
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 48);
 }
 
-const ERRORS = {
-  too_short: 'Adresa musí mať aspoň tri znaky.',
-  reserved: 'Túto adresu si drží samotná aplikácia, zvoľte inú.',
-  invalid: 'Použite iba písmená bez diakritiky, číslice a pomlčky.',
-  taken: 'Takúto adresu už niekto používa.',
-  drive_failed: 'Nepodarilo sa vytvoriť priečinok na Google Drive.',
-  google_reauth: 'Prístup ku Google vypršal. Odhláste sa a prihláste znova.',
-};
-
-export default function AdminClient({ events, baseUrl }) {
+export default function AdminClient({ events, baseUrl, locale, t }) {
   const router = useRouter();
   const [open, setOpen] = useState(events.length === 0);
   const [hostNames, setHostNames] = useState('');
@@ -42,16 +33,17 @@ export default function AdminClient({ events, baseUrl }) {
       const res = await fetch('/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hostNames, slug: effectiveSlug, lang: 'sk' }),
+        body: JSON.stringify({ hostNames, slug: effectiveSlug, lang: locale }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(ERRORS[data.error] ?? 'Nepodarilo sa vytvoriť akciu.');
+        const base = t.errors[data.error] ?? t.errors.generic;
+        setError(data.detail ? `${base} (${data.detail})` : base);
         return;
       }
       router.push(`/admin/${data.event.id}`);
     } catch {
-      setError('Nepodarilo sa spojiť so serverom.');
+      setError(t.errors.network);
     } finally {
       setBusy(false);
     }
@@ -59,29 +51,38 @@ export default function AdminClient({ events, baseUrl }) {
 
   return (
     <>
-      <h1 className="h1">Moje akcie</h1>
-      <p className="note" style={{ fontSize: 16 }}>
-        Každá akcia má vlastnú adresu, vlastný priečinok na Drive a vlastné nastavenia.
-      </p>
+      <h1 className="ui-title">{t.title}</h1>
+      <p className="ui-sub">{t.sub}</p>
 
       {events.length > 0 && (
-        <div className="cards">
+        <div className="ui-eventcards">
           {events.map((e) => (
-            <div className="card-row" key={e.id}>
-              <h3>{e.settings.hostNames || e.slug}</h3>
-              <div className="url">
-                {baseUrl ? `${baseUrl}/${e.slug}` : `/${e.slug}`}
-              </div>
-              <div className="row-actions">
-                <Link className="btn" href={`/admin/${e.id}`}>
-                  Nastavenia
+            <div className="ui-card" key={e.id} style={{ marginBottom: 0 }}>
+              <h3
+                style={{
+                  margin: '0 0 4px',
+                  fontSize: 20,
+                  fontWeight: 620,
+                  letterSpacing: '-0.025em',
+                }}
+              >
+                {e.settings.hostNames || e.slug}
+              </h3>
+              <div className="ui-url">{baseUrl ? `${baseUrl}/${e.slug}` : `/${e.slug}`}</div>
+              <div className="ui-actions" style={{ marginTop: 16 }}>
+                <Link className="ui-btn" href={`/admin/${e.id}`}>
+                  {t.settings}
                 </Link>
-                <Link className="btn btn--quiet" href={`/${e.slug}`} target="_blank">
-                  Otvoriť
+                <Link className="ui-btn ui-btn--glass" href={`/${e.slug}`} target="_blank">
+                  {t.open}
                 </Link>
                 {e.settings.slideshowEnabled !== false && (
-                  <Link className="btn btn--quiet" href={`/${e.slug}/slideshow`} target="_blank">
-                    Premietanie
+                  <Link
+                    className="ui-btn ui-btn--glass"
+                    href={`/${e.slug}/slideshow`}
+                    target="_blank"
+                  >
+                    {t.slideshow}
                   </Link>
                 )}
               </div>
@@ -91,13 +92,18 @@ export default function AdminClient({ events, baseUrl }) {
       )}
 
       {open ? (
-        <form className="section" onSubmit={create} style={{ marginTop: 24 }}>
-          <h2>Nová akcia</h2>
+        <form className="ui-card" onSubmit={create} style={{ marginTop: 20 }}>
+          <h3
+            style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 620, letterSpacing: '-0.02em' }}
+          >
+            {t.newEvent}
+          </h3>
 
-          <div className="field">
-            <label htmlFor="hosts">Mená alebo názov akcie</label>
+          <div className="ui-field">
+            <label htmlFor="hosts">{t.nameLabel}</label>
             <input
               id="hosts"
+              className="ui-input"
               type="text"
               value={hostNames}
               onChange={(ev) => setHostNames(ev.target.value)}
@@ -105,13 +111,14 @@ export default function AdminClient({ events, baseUrl }) {
               autoComplete="off"
               required
             />
-            <p className="note">Zobrazí sa hosťom v hlavičke stránky.</p>
+            <p className="ui-hint">{t.nameHint}</p>
           </div>
 
-          <div className="field">
-            <label htmlFor="slug">Adresa</label>
+          <div className="ui-field">
+            <label htmlFor="slug">{t.slugLabel}</label>
             <input
               id="slug"
+              className="ui-input"
               type="text"
               value={touched ? slug : effectiveSlug}
               onChange={(ev) => {
@@ -122,38 +129,36 @@ export default function AdminClient({ events, baseUrl }) {
               autoComplete="off"
               spellCheck={false}
             />
-            <p className="note">
+            <p className="ui-hint">
               {baseUrl ? `${baseUrl}/` : '/'}
-              <strong>{effectiveSlug || 'adresa'}</strong> - toto pôjde na QR kód, takže čím
-              kratšie, tým lepšie.
+              <strong style={{ color: 'var(--text)' }}>{effectiveSlug || 'adresa'}</strong>{' '}
+              {t.slugHint}
             </p>
           </div>
 
-          {error && <div className="alert">{error}</div>}
+          {error && <div className="ui-alert">{error}</div>}
 
-          <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-            <button className="btn" disabled={busy || !hostNames.trim() || !effectiveSlug}>
-              {busy ? 'Zakladám…' : 'Vytvoriť'}
+          <div className="ui-actions" style={{ marginTop: 18 }}>
+            <button className="ui-btn" disabled={busy || !hostNames.trim() || !effectiveSlug}>
+              {busy ? t.creating : t.create}
             </button>
             {events.length > 0 && (
               <button
                 type="button"
-                className="btn btn--quiet"
+                className="ui-btn ui-btn--plain"
                 onClick={() => setOpen(false)}
                 disabled={busy}
               >
-                Zrušiť
+                {t.cancel}
               </button>
             )}
           </div>
-          <p className="note">
-            Pri vytvorení sa vo vašom Google Drive založí nový priečinok pre túto akciu.
-          </p>
+          <p className="ui-hint">{t.createNote}</p>
         </form>
       ) : (
-        <div style={{ marginTop: 24, maxWidth: 260 }}>
-          <button className="btn btn--quiet" onClick={() => setOpen(true)}>
-            Nová akcia
+        <div style={{ marginTop: 20 }}>
+          <button className="ui-btn ui-btn--glass" onClick={() => setOpen(true)}>
+            {t.newEvent}
           </button>
         </div>
       )}

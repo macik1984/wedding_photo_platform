@@ -54,9 +54,34 @@ export async function POST(request) {
   } catch (err) {
     console.error('create event failed', err);
     const msg = String(err.message ?? '');
+
     if (msg.includes('google refresh')) {
       return NextResponse.json({ error: 'google_reauth' }, { status: 401 });
     }
-    return NextResponse.json({ error: 'drive_failed' }, { status: 502 });
+
+    // Najcastejsia pricina je nezapnute Drive API v Google projekte. Bez
+    // vypisania dovodu by organizator hadal, preto sem posielame aj kratky
+    // vytazok z Google odpovede - su to jeho vlastne udaje, nie tajomstvo.
+    if (msg.includes('SERVICE_DISABLED') || msg.includes('has not been used in project')) {
+      return NextResponse.json({ error: 'drive_api_off' }, { status: 502 });
+    }
+
+    // Token bez rozsahu drive.file - clovek na suhlasnej obrazovke nezaskrtol
+    // pristup k Disku. Nove prihlasenia to uz odchyti callback, toto je pre
+    // ucty, ktore vznikli predtym.
+    if (
+      msg.includes('ACCESS_TOKEN_SCOPE_INSUFFICIENT') ||
+      msg.includes('insufficientPermissions')
+    ) {
+      return NextResponse.json({ error: 'scope_missing' }, { status: 403 });
+    }
+    if (msg.includes('storageQuotaExceeded')) {
+      return NextResponse.json({ error: 'drive_full' }, { status: 502 });
+    }
+
+    return NextResponse.json(
+      { error: 'drive_failed', detail: msg.slice(0, 300) },
+      { status: 502 }
+    );
   }
 }

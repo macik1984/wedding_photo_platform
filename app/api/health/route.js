@@ -48,5 +48,8 @@ export async function GET() {
     );
   }
 
-  return NextResponse.json({ ok: true, redirectUri: `${process.env.APP_URL}/api/auth/google/callback` });
+  // Rovnaka normalizacia ako v lib/google.js, inak by diagnostika ukazovala
+  // inu adresu, nez aplikacia naozaj posiela Googlu.
+  const base = process.env.APP_URL.replace(/\/+$/, '');
+  return NextResponse.json({ ok: true, redirectUri: `${base}/api/auth/google/callback` });
 }

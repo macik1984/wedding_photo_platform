@@ -793,300 +793,52 @@ a {
   margin-bottom: 20px;
 }
 
-/* ---------- administracia ---------- */
+/* ===================================================================
+   Kompatibilita
+   Stranky hosti sa otvaraju na nahodnych telefonoch, takze novsie
+   vlastnosti maju vzdy pred sebou zalozny zapis.
+   =================================================================== */
 
-.bar-top {
-  border-bottom: 1px solid var(--line);
-  background: var(--card);
+body,
+.sheet {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
-.bar-top .inner {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  box-shadow: 0 0 0 3px rgba(181, 150, 107, 0.2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
-.bar-top .who {
-  font-size: 13px;
-  color: var(--ink-soft);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.btn--danger {
+  border-color: rgba(168, 89, 63, 0.45);
+  border-color: color-mix(in srgb, var(--err) 45%, transparent);
 }
 
-.wrap {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 28px 20px 72px;
+.alert {
+  border-color: rgba(168, 89, 63, 0.35);
+  border-color: color-mix(in srgb, var(--err) 35%, transparent);
+  background: #fbeee9;
+  background: color-mix(in srgb, var(--err) 8%, var(--card));
 }
 
-.wrap--narrow {
-  max-width: 720px;
+.lightbox {
+  height: 100vh;
+  height: 100dvh;
 }
 
-.h1 {
-  font-size: clamp(30px, 6vw, 40px);
-  margin: 0 0 6px;
-  letter-spacing: 0.01em;
-  font-weight: 500;
+.show {
+  height: 100vh;
+  height: 100dvh;
 }
 
-.cards {
-  display: grid;
-  gap: 12px;
-  margin-top: 22px;
-}
-
-@media (min-width: 720px) {
-  .cards {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.card-row {
-  border: 1px solid var(--line);
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 18px;
-}
-
-.card-row h3 {
-  margin: 0 0 2px;
-  font-size: 22px;
-  font-weight: 500;
-}
-
-.card-row .url {
-  font-size: 14px;
-  color: var(--ink-soft);
-  word-break: break-all;
-}
-
-.row-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.row-actions .btn {
-  width: auto;
-  padding: 9px 14px;
-  min-height: 0;
-  font-size: 11px;
-}
-
-.section {
-  border: 1px solid var(--line);
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 20px 18px;
-  margin-bottom: 16px;
-}
-
-.section > h2 {
-  margin: 0 0 14px;
-  font-size: 13px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  font-weight: 500;
-}
-
-.two {
-  display: grid;
-  gap: 0 16px;
-}
-
-@media (min-width: 640px) {
-  .two {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  border: 1px solid var(--line);
-  background: var(--paper);
-  border-radius: 999px;
-  padding: 9px 15px;
-  font-size: 14px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.chip[data-active='true'] {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, var(--card));
-}
-
-.swatch {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  flex: none;
-}
-
-.toggle {
-  display: flex;
-  align-items: flex-start;
-  gap: 11px;
-  padding: 10px 0;
-  cursor: pointer;
-  border-top: 1px solid var(--line);
-}
-
-.toggle:first-of-type {
-  border-top: 0;
-}
-
-.toggle input {
-  appearance: none;
-  flex: none;
-  width: 19px;
-  height: 19px;
-  margin-top: 3px;
-  border: 1px solid var(--accent);
-  border-radius: 2px;
-  background: var(--paper);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-}
-
-.toggle input:checked::after {
-  content: '✓';
-  font-size: 14px;
-  color: var(--accent);
-  line-height: 1;
-}
-
-.toggle .t {
-  font-size: 16px;
-}
-
-.toggle .d {
-  font-size: 13px;
-  color: var(--ink-soft);
-}
-
-.mission-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-  align-items: center;
-}
-
-.mission-row input {
-  flex: 1;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--paper);
-  font-size: 16px;
-  outline: none;
-}
-
-.mission-row button {
-  border: 1px solid var(--line);
-  background: var(--paper);
-  border-radius: var(--radius);
-  width: 38px;
-  height: 38px;
-  flex: none;
-  cursor: pointer;
-  color: var(--ink-soft);
-  font-size: 16px;
-  line-height: 1;
-}
-
-.sticky-save {
-  position: sticky;
-  bottom: 0;
-  background: linear-gradient(to top, var(--paper) 62%, transparent);
-  padding: 16px 0 8px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.saved {
-  font-size: 14px;
-  color: var(--ok);
-}
-
-/* ---------- uvodna stranka ---------- */
-
-.hero {
-  text-align: center;
-  padding: 60px 0 30px;
-}
-
-.hero h1 {
-  font-size: clamp(40px, 10vw, 68px);
-  margin: 10px 0 14px;
-  font-weight: 500;
-  line-height: 1.05;
-}
-
-.hero p {
-  max-width: 44ch;
-  margin: 0 auto;
-  color: var(--ink-soft);
-  font-size: 19px;
-}
-
-.steps {
-  display: grid;
-  gap: 14px;
-  margin: 40px 0 0;
-}
-
-@media (min-width: 760px) {
-  .steps {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.step {
-  border: 1px solid var(--line);
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 20px 18px;
-}
-
-.step .n {
-  font-family: var(--font-script);
-  font-size: 40px;
-  color: var(--accent);
-  line-height: 1;
-}
-
-.step h3 {
-  margin: 8px 0 4px;
-  font-size: 20px;
-  font-weight: 500;
-}
-
-.step p {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 16px;
-}
-
-.cta {
-  max-width: 320px;
-  margin: 34px auto 0;
+/* Obrys pri ovladani klavesnicou */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
