@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { t } from '../../i18n';
 import useLang from '../../useLang';
 import Foot from '../../components/Foot';
-import { BotanicalTopRight } from '../../components/Botanicals';
+import { SymbolCorners } from '../../components/EventSymbol';
 
 const POLL_MS = 30000;
 
@@ -66,7 +66,7 @@ export default function GalleryClient({ slug, settings }) {
 
   return (
     <main className="sheet sheet--wide">
-      {settings.ornaments && <BotanicalTopRight />}
+      <SymbolCorners settings={settings} single />
 
       <div className="layer">
         <header className="head">

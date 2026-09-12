@@ -2,8 +2,10 @@ import Link from 'next/link';
 import { currentUser } from '@/lib/session';
 import { resolveLocale } from '@/lib/locale';
 import { tx } from './ui-strings';
+import { TEMPLATES, THEMES, templateContent } from '@/lib/settings';
 import Backdrop from './components/Backdrop';
 import PhoneMock from './components/PhoneMock';
+import ExampleTabs from './components/ExampleTabs';
 import LangToggle from './components/LangToggle';
 
 export const dynamic = 'force-dynamic';
@@ -24,6 +26,36 @@ export default async function Landing({ searchParams }) {
   const t = tx(locale);
   const L = t.landing;
   const error = params?.error;
+
+  // Ukazky beru texty aj ulohy zo sablon, takze na stranke stoji presne to,
+  // co organizator uvidi po zalozeni akcie.
+  const examples = L.examples.map(({ key, names }) => {
+    const c = templateContent(key, locale);
+    const theme = THEMES[TEMPLATES[key].look.theme].vars;
+    return {
+      key,
+      tab: TEMPLATES[key].label[locale] ?? TEMPLATES[key].label.sk,
+      missions: c.missions,
+      // farby temy danej sablony; pismo ostava jedno, aby stranka
+      // nedotahovala dalsie fonty kvoli ukazke
+      vars: {
+        '--pp-paper': theme['--paper'],
+        '--pp-card': theme['--card'],
+        '--pp-ink': theme['--ink'],
+        '--pp-ink-soft': theme['--ink-soft'],
+        '--pp-line': theme['--line'],
+        '--pp-accent': theme['--accent'],
+      },
+      phone: {
+        ...L.phone,
+        eyebrow: c.eyebrow,
+        names,
+        kicker: c.headline,
+        sub: c.lead,
+        missionsTitle: c.missionsTitle,
+      },
+    };
+  });
 
   return (
     <div className="ui">
@@ -98,7 +130,7 @@ export default async function Landing({ searchParams }) {
             </span>
           </div>
 
-          <PhoneMock t={L.phone} />
+          <PhoneMock t={examples[0].phone} vars={examples[0].vars} />
 
           <div className="ui-chip ui-chip--r">
             <span className="ic">☁︎</span>
@@ -144,20 +176,7 @@ export default async function Landing({ searchParams }) {
           <h2>{L.missions.title}</h2>
           <p className="intro">{L.missions.lead}</p>
 
-          <div className="ui-split">
-            <ul className="ui-missioncards">
-              {L.missions.items.map((m, i) => (
-                <li className="ui-missioncard" key={m} style={{ '--i': i }}>
-                  <span className="tick" aria-hidden="true" />
-                  {m}
-                </li>
-              ))}
-            </ul>
-
-            <div className="ui-splitphone" aria-hidden="true">
-              <PhoneMock t={L.phone} missions={L.missions.items} variant="missions" />
-            </div>
-          </div>
+          <ExampleTabs examples={examples} />
 
           <p className="ui-benefit">{L.missions.benefit}</p>
         </section>

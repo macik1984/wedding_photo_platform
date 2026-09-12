@@ -41,7 +41,7 @@ export async function POST(request) {
     const token = await accessTokenFor(user.refresh_token);
     const folder = await createFolder(token, hostNames ? `Fotky - ${hostNames}` : `Fotky - ${slug}`);
 
-    const settings = defaultSettings(lang, hostNames);
+    const settings = defaultSettings(lang, hostNames, body.template);
     const event = await createEvent({
       id: crypto.randomUUID(),
       userId: user.id,

@@ -3,7 +3,7 @@ import { currentUser } from '@/lib/session';
 import { getEvent } from '@/lib/db';
 import { appUrl } from '@/lib/google';
 import { resolveLocale } from '@/lib/locale';
-import { defaultSettings } from '@/lib/settings';
+import { withDefaults } from '@/lib/settings';
 import { tx } from '../../ui-strings';
 import Backdrop from '../../components/Backdrop';
 import TopBar from '../../components/TopBar';
@@ -39,7 +39,7 @@ export default async function EditorPage({ params }) {
           baseUrl={base}
           locale={locale}
           t={t.editor}
-          initial={{ ...defaultSettings(), ...(event.settings ?? {}) }}
+          initial={withDefaults(event.settings, locale)}
         />
       </main>
     </div>

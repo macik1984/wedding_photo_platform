@@ -10,11 +10,12 @@ import CameraIcon from './CameraIcon';
  * `vars` prepisuje farby a pisma obrazovky (pouziva nahlad v administracii);
  * bez neho sa kresli predvolena papierova tema.
  */
-export default function PhoneMock({ t, missions = [], variant = 'upload', vars }) {
+export default function PhoneMock({ t, missions = [], variant = 'upload', vars, symbol }) {
   return (
     <div className="ui-phone">
       <div className="screen" style={vars}>
         <div className="island" />
+        {symbol}
         {t.eyebrow && <p className="eyebrow">{t.eyebrow}</p>}
         {t.names && <p className="names">{t.names}</p>}
         <div className="rule" />

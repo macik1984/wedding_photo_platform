@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { TEMPLATES } from '@/lib/settings';
 
 function toSlug(input) {
   return String(input ?? '')
@@ -20,6 +21,7 @@ export default function AdminClient({ events, baseUrl, locale, t }) {
   const [hostNames, setHostNames] = useState('');
   const [slug, setSlug] = useState('');
   const [touched, setTouched] = useState(false);
+  const [template, setTemplate] = useState('wedding');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -33,7 +35,7 @@ export default function AdminClient({ events, baseUrl, locale, t }) {
       const res = await fetch('/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hostNames, slug: effectiveSlug, lang: locale }),
+        body: JSON.stringify({ hostNames, slug: effectiveSlug, lang: locale, template }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -98,6 +100,24 @@ export default function AdminClient({ events, baseUrl, locale, t }) {
           >
             {t.newEvent}
           </h3>
+
+          {/* typ akcie urcuje vzhlad, texty aj ulohy, ktore organizator dostane */}
+          <div className="ui-field">
+            <label>{t.typeLabel}</label>
+            <div className="ui-seg">
+              {Object.entries(TEMPLATES).map(([key, tpl]) => (
+                <button
+                  key={key}
+                  type="button"
+                  data-on={template === key}
+                  onClick={() => setTemplate(key)}
+                >
+                  {tpl.label[locale] ?? tpl.label.sk}
+                </button>
+              ))}
+            </div>
+            <p className="ui-hint">{t.typeHint}</p>
+          </div>
 
           <div className="ui-field">
             <label htmlFor="hosts">{t.nameLabel}</label>

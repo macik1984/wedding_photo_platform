@@ -1871,3 +1871,117 @@
     transform-origin: top center;
   }
 }
+
+/* ---------- vyber emoji a loga ---------- */
+
+.ui-emoji {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ui-emojibtn {
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+  transition:
+    border-color 0.16s,
+    transform 0.16s;
+}
+
+.ui-emojibtn[data-on='true'] {
+  border-color: var(--tint);
+  box-shadow: 0 0 0 3px var(--tint-soft);
+}
+
+.ui-logo {
+  display: block;
+  max-width: 180px;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  background: var(--glass-strong);
+  border: 1px solid var(--line);
+}
+
+/* tlacidlo na vyber suboru je <label>, nech vyzera ako ostatne tlacidla */
+label.ui-btn {
+  cursor: pointer;
+}
+
+label.ui-btn[data-busy='true'] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ---------- znak v nahlade telefonu ---------- */
+
+.ui-phone .sym {
+  margin: 20px 0 0;
+  line-height: 1;
+}
+
+.ui-phone .sym--emoji {
+  font-size: 22px;
+}
+
+.ui-phone .sym--mono {
+  font-family: var(--pp-script, 'Alex Brush', cursive);
+  font-size: 24px;
+  color: var(--pp-accent, #b5966b);
+}
+
+.ui-phone img.sym--logo {
+  display: block;
+  margin: 20px auto 0;
+  max-height: 38px;
+  max-width: 60%;
+  width: auto;
+  object-fit: contain;
+}
+
+/* rovnake vetvicky ako na ozajstnej stranke, len zmensene do rohu */
+.ui-phone .sym--orn {
+  position: absolute;
+  top: -4px;
+  right: -12px;
+  width: 92px;
+  margin: 0;
+  color: var(--pp-accent, #b5966b);
+  opacity: 0.5;
+}
+
+.ui-phone .sym--orn .botanical {
+  position: static;
+  width: 100%;
+  color: inherit;
+  opacity: 1;
+}
+
+/* ---------- prepinac ukazok na uvodnej stranke ---------- */
+
+.ui-examples {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0 4px;
+}
+
+.ui-examples .ui-seg {
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .ui-examples .ui-seg button {
+    padding: 8px 11px;
+    font-size: 13px;
+  }
+}

@@ -3,9 +3,28 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { THEMES, FONTS, longDate } from '@/lib/settings';
+import {
+  THEMES,
+  FONTS,
+  TEMPLATES,
+  EMOJI_CHOICES,
+  templateContent,
+  monogramOf,
+  longDate,
+} from '@/lib/settings';
 import QrPanel from '../../components/QrPanel';
 import EventPreview from '../../components/EventPreview';
+
+const SYMBOL_KEYS = ['ornaments', 'emoji', 'monogram', 'logo', 'none'];
+
+/** Ku ktorej volbe patri aka vysvetlivka pod prepinacom. */
+const SYMBOL_HINT = {
+  ornaments: 'symbolHintOrnaments',
+  emoji: 'symbolHintEmoji',
+  monogram: 'symbolHintMonogram',
+  logo: 'symbolHintLogo',
+  none: 'symbolHintNone',
+};
 
 const ACCENTS = [
   '#b5966b',
@@ -92,6 +111,8 @@ export default function EditorClient({ eventId, slug, baseUrl, locale, t, initia
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
   const [customDate, setCustomDate] = useState(Boolean(initial.dateText));
+  const [logoBusy, setLogoBusy] = useState(false);
+  const [logoError, setLogoError] = useState('');
 
   const set = (patch) => {
     setS((prev) => ({ ...prev, ...patch }));
@@ -142,6 +163,87 @@ export default function EditorClient({ eventId, slug, baseUrl, locale, t, initia
     );
   }
 
+  /**
+   * Sablona prepise vzhlad, texty aj ulohy naraz. Pytame sa, lebo pre niekoho,
+   * kto uz ma vsetko napisane, by to bola strata prace.
+   */
+  function applyTemplate(key) {
+    const tpl = TEMPLATES[key];
+    if (!tpl) return;
+    if (!window.confirm(t.templateConfirm)) return;
+    const c = templateContent(key, locale);
+    set({
+      template: key,
+      theme: tpl.look.theme,
+      fonts: tpl.look.fonts,
+      accent: tpl.look.accent,
+      symbol: s.symbol === 'logo' && s.logoFileId ? 'logo' : tpl.look.symbol,
+      emoji: tpl.look.emoji,
+      eyebrow: c.eyebrow,
+      headline: c.headline,
+      lead: c.lead,
+      thanks: c.thanks,
+      missionsTitle: c.missionsTitle,
+      missionsClosing: c.missionsClosing,
+      missions: [...c.missions],
+    });
+  }
+
+  /** Ulohy v jazyku administracie, bez zasahu do vzhladu a ostatnych textov. */
+  function loadMissions(key) {
+    const c = templateContent(key, locale);
+    set({
+      missionsTitle: c.missionsTitle,
+      missionsClosing: c.missionsClosing,
+      missions: [...c.missions],
+    });
+  }
+
+  async function uploadLogo(file) {
+    if (!file) return;
+    setLogoError('');
+    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
+      setLogoError(t.logoBadType);
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setLogoError(t.logoTooBig);
+      return;
+    }
+
+    setLogoBusy(true);
+    try {
+      const res = await fetch(`/api/events/${eventId}/logo`, {
+        method: 'POST',
+        headers: { 'Content-Type': file.type },
+        body: file,
+      });
+      if (!res.ok) throw new Error('upload');
+      const data = await res.json();
+      set({ logoFileId: data.logoFileId, symbol: 'logo' });
+      router.refresh();
+    } catch {
+      setLogoError(t.logoFailed);
+    } finally {
+      setLogoBusy(false);
+    }
+  }
+
+  async function removeLogo() {
+    setLogoBusy(true);
+    setLogoError('');
+    try {
+      const res = await fetch(`/api/events/${eventId}/logo`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('delete');
+      set({ logoFileId: '', symbol: s.symbol === 'logo' ? 'none' : s.symbol });
+      router.refresh();
+    } catch {
+      setLogoError(t.logoFailed);
+    } finally {
+      setLogoBusy(false);
+    }
+  }
+
   function editMission(i, value) {
     const missions = [...s.missions];
     missions[i] = value;
@@ -168,7 +270,7 @@ export default function EditorClient({ eventId, slug, baseUrl, locale, t, initia
       <p className="ui-sub">{t.sub}</p>
 
       <div className="ui-editor">
-        <EventPreview settings={s} t={t} />
+        <EventPreview settings={s} t={t} slug={slug} />
 
         <div className="form">
           <div className="ui-group">
@@ -183,6 +285,36 @@ export default function EditorClient({ eventId, slug, baseUrl, locale, t, initia
                 </button>
                 <QrPanel url={publicUrl} t={t} fileName={slug} />
               </div>
+            </div>
+          </div>
+
+          <div className="ui-group">
+            <p className="label">{t.templateGroup}</p>
+            <div className="ui-card" style={{ marginBottom: 0 }}>
+              <Field hint={t.templateHint}>
+                <div className="ui-themes">
+                  {Object.entries(TEMPLATES).map(([key, tpl]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      className="ui-theme"
+                      data-on={s.template === key}
+                      onClick={() => applyTemplate(key)}
+                    >
+                      <span
+                        className="swatch"
+                        style={{ background: THEMES[tpl.look.theme].vars['--paper'] }}
+                      >
+                        <span
+                          className="dot"
+                          style={{ background: THEMES[tpl.look.theme].vars['--accent'] }}
+                        />
+                      </span>
+                      <span className="name">{tpl.label[locale] ?? tpl.label.sk}</span>
+                    </button>
+                  ))}
+                </div>
+              </Field>
             </div>
           </div>
 
@@ -333,13 +465,92 @@ export default function EditorClient({ eventId, slug, baseUrl, locale, t, initia
               </Field>
             </div>
 
-            <div className="ui-list" style={{ marginTop: 12 }}>
-              <SwitchRow
-                checked={s.ornaments}
-                onChange={(v) => set({ ornaments: v })}
-                title={t.ornaments}
-                desc={t.ornamentsDesc}
-              />
+            <div className="ui-card" style={{ marginTop: 12, marginBottom: 0 }}>
+              <Field label={t.symbol} hint={SYMBOL_HINT[s.symbol] ? t[SYMBOL_HINT[s.symbol]] : ''}>
+                <div className="ui-seg">
+                  {SYMBOL_KEYS.map((key) => (
+                    <button
+                      key={key}
+                      type="button"
+                      data-on={s.symbol === key}
+                      onClick={() => set({ symbol: key })}
+                    >
+                      {t[`symbol_${key}`]}
+                    </button>
+                  ))}
+                </div>
+              </Field>
+
+              {s.symbol === 'emoji' && (
+                <Field label={t.emojiPick}>
+                  <div className="ui-emoji">
+                    {EMOJI_CHOICES.map((e) => (
+                      <button
+                        key={e}
+                        type="button"
+                        className="ui-emojibtn"
+                        data-on={s.emoji === e}
+                        onClick={() => set({ emoji: e })}
+                      >
+                        {e}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    className="ui-input"
+                    style={{ marginTop: 10, maxWidth: 140 }}
+                    value={s.emoji}
+                    onChange={(e) => set({ emoji: e.target.value.slice(0, 4) })}
+                    placeholder="🎈"
+                    aria-label={t.emojiOwn}
+                  />
+                </Field>
+              )}
+
+              {s.symbol === 'monogram' && (
+                <p className="ui-hint" style={{ margin: 0 }}>
+                  {t.monogramHint} <b>{monogramOf(s.hostNames) || '—'}</b>
+                </p>
+              )}
+
+              {s.symbol === 'logo' && (
+                <Field label={t.logo} hint={t.logoHint}>
+                  {s.logoFileId && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img className="ui-logo" src={`/api/e/${slug}/logo?v=${s.logoFileId}`} alt="" />
+                  )}
+                  <div className="ui-actions" style={{ marginTop: 10 }}>
+                    <label className="ui-btn ui-btn--glass" data-busy={logoBusy}>
+                      {logoBusy ? t.logoUploading : s.logoFileId ? t.logoReplace : t.logoPick}
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        hidden
+                        disabled={logoBusy}
+                        onChange={(e) => {
+                          uploadLogo(e.target.files?.[0]);
+                          e.target.value = '';
+                        }}
+                      />
+                    </label>
+                    {s.logoFileId && (
+                      <button
+                        type="button"
+                        className="ui-btn ui-btn--plain"
+                        onClick={removeLogo}
+                        disabled={logoBusy}
+                      >
+                        {t.logoRemove}
+                      </button>
+                    )}
+                  </div>
+                  {logoError && (
+                    <p className="ui-hint" style={{ color: 'var(--danger)' }}>
+                      {logoError}
+                    </p>
+                  )}
+                </Field>
+              )}
             </div>
           </div>
 
@@ -352,6 +563,17 @@ export default function EditorClient({ eventId, slug, baseUrl, locale, t, initia
                 onChange={(v) => set({ missionsTitle: v })}
                 max={80}
               />
+
+              {/* hotove ulohy podla typu akcie, v jazyku administracie */}
+              <Field label={t.missionPacks} hint={t.missionPacksHint}>
+                <div className="ui-seg">
+                  {Object.entries(TEMPLATES).map(([key, tpl]) => (
+                    <button key={key} type="button" onClick={() => loadMissions(key)}>
+                      {tpl.label[locale] ?? tpl.label.sk}
+                    </button>
+                  ))}
+                </div>
+              </Field>
 
               {s.missions.map((m, i) => (
                 <div className="ui-mission" key={i}>

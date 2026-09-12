@@ -35,11 +35,24 @@ používateľov a nastavenia akcií.
 
 ## Čo si organizátor nastavuje
 
-Mená a dátum, riadok nad menami, nadpis, podnadpis a poďakovanie. Farebnú tému
-(päť hotových vrátane tmavej) a k tomu vlastnú hlavnú farbu. Písmo zo štyroch
-dvojíc. Botanické ozdoby zapnúť alebo vypnúť. Celý zoznam úloh foto misie
-vrátane poradia. A prepínače: galéria, premietanie, prijímanie videí,
-vyžadovanie mena.
+**Typ akcie** sa vyberá hneď pri zakladaní: svadba, oslava, firemná akcia,
+teambuilding. Šablóna nastaví tému, písmo, znak v hlavičke, všetky texty aj
+úlohy foto misie naraz, takže na firemný večierok nikto nezačína na svadobnej
+stránke. V nastaveniach sa dá šablóna prepnúť kedykoľvek (pýta sa, lebo
+prepisuje texty) a samotné úlohy sa dajú načítať aj samostatne.
+
+Ďalej: mená a dátum, riadok nad menami, nadpis, podnadpis a poďakovanie.
+Farebnú tému (päť hotových vrátane tmavej) a k tomu vlastnú hlavnú farbu.
+Písmo zo štyroch dvojíc. Celý zoznam úloh foto misie vrátane poradia.
+A prepínače: galéria, premietanie, prijímanie videí, vyžadovanie mena.
+
+**Znak v hlavičke** je na výber z piatich možností: botanické ozdoby v rohoch,
+emoji (z ponuky alebo vlastné), monogram zo začiatočných písmen mien, vlastné
+logo alebo nič. Logo sa nahráva priamo v nastaveniach (PNG, JPG alebo WebP do
+2 MB) a ukladá sa do podpriečinka „Paparazzi - vzhlad" v priečinku akcie, aby
+sa nemiešalo medzi fotky od hostí. Hosťom ho servíruje `/api/e/<slug>/logo`,
+ktorý berie id súboru z nastavení akcie, nie z adresy, takže cez neho nejde
+vytiahnuť nič iné z Drive organizátora. Priečinok zostáva súkromný.
 
 Vedľa nastavení beží náhľad telefónu s tým, čo uvidí hosť. Kreslí sa
 z rozpracovaných hodnôt, takže farbu, písmo aj texty vidno hneď pri písaní
@@ -64,7 +77,11 @@ a text nepreblikne. Ručná voľba z prepínača v hlavičke sa uloží do cooki
 vlastný prepínač v pätičke.
 
 Texty, ktoré napíše organizátor (nadpis, úlohy, poďakovanie), sa neprekladajú;
-idú tak, ako ich zadal.
+idú tak, ako ich zadal. Hosť s anglickým prehliadačom teda uvidí anglické
+tlačidlá, ale úlohy foto misie v jazyku, v ktorom ich organizátor napísal.
+Preto sú šablóny pripravené v oboch jazykoch a pri zakladaní akcie sa berie
+ten, v ktorom má organizátor administráciu; prepnutím jazyka a načítaním úloh
+znova sa dá zoznam kedykoľvek prepísať na druhý jazyk.
 
 ---
 

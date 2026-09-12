@@ -1,8 +1,34 @@
 'use client';
 
 import { useState } from 'react';
-import { themeStyle, fontHref } from '@/lib/settings';
+import { themeStyle, fontHref, monogramOf } from '@/lib/settings';
 import PhoneMock from './PhoneMock';
+import { BotanicalTopRight } from './Botanicals';
+
+/** Znak v hlavicke tak, ako ho uvidi host - v zmensenine telefonu. */
+function PreviewSymbol({ settings, slug }) {
+  if (settings.symbol === 'emoji' && settings.emoji) {
+    return <p className="sym sym--emoji">{settings.emoji}</p>;
+  }
+  if (settings.symbol === 'monogram') {
+    const mono = monogramOf(settings.hostNames);
+    return mono ? <p className="sym sym--mono">{mono}</p> : null;
+  }
+  if (settings.symbol === 'logo' && settings.logoFileId && slug) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return (
+      <img className="sym sym--logo" src={`/api/e/${slug}/logo?v=${settings.logoFileId}`} alt="" />
+    );
+  }
+  if (settings.symbol === 'ornaments') {
+    return (
+      <span className="sym sym--orn" aria-hidden="true">
+        <BotanicalTopRight />
+      </span>
+    );
+  }
+  return null;
+}
 
 /**
  * Zive okno do toho, co uvidi host. Kresli sa z rozpracovanych nastaveni,
@@ -12,7 +38,7 @@ import PhoneMock from './PhoneMock';
  * nastroj, stranka akcie je pozvanka. Bez tohto nahladu to pri prvom
  * zakladani prekvapi.
  */
-export default function EventPreview({ settings, t }) {
+export default function EventPreview({ settings, t, slug }) {
   const [variant, setVariant] = useState('upload');
   // Na uzkom displeji by nahlad zatlacil formular pod okraj, takze je zlozeny;
   // na sirokom ho CSS drzi otvoreny a tlacidlo nema co prepinat.
@@ -87,6 +113,7 @@ export default function EventPreview({ settings, t }) {
             vars={vars}
             missions={missions}
             variant={hasMissions ? variant : 'upload'}
+            symbol={<PreviewSymbol settings={settings} slug={slug} />}
           />
         </div>
 

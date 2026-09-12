@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { t } from '../i18n';
 import useLang from '../useLang';
 import Foot from '../components/Foot';
-import { BotanicalTopRight, BotanicalBottomLeft } from '../components/Botanicals';
+import EventSymbol, { SymbolCorners } from '../components/EventSymbol';
 import CameraIcon from '../components/CameraIcon';
 
 // 3 MB: nasobok 256 kB, ako vyzaduje Google, a zaroven pod 4,5 MB limit Vercelu
@@ -293,12 +293,7 @@ export default function UploadClient({ slug, settings }) {
 
   return (
     <main className="sheet">
-      {settings.ornaments && (
-        <>
-          <BotanicalTopRight />
-          <BotanicalBottomLeft />
-        </>
-      )}
+      <SymbolCorners settings={settings} />
 
       <div className="layer">
         {doneCount > 0 ? (
@@ -328,6 +323,7 @@ export default function UploadClient({ slug, settings }) {
         ) : (
           <>
             <header className="head">
+              <EventSymbol settings={settings} slug={slug} />
               {settings.eyebrow && <p className="eyebrow">{settings.eyebrow}</p>}
               {settings.hostNames && <h1 className="names script">{settings.hostNames}</h1>}
               <hr className="dash" />
