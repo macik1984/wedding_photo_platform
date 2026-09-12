@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { THEMES, FONTS, longDate } from '@/lib/settings';
 import QrPanel from '../../components/QrPanel';
+import EventPreview from '../../components/EventPreview';
 
 const ACCENTS = [
   '#b5966b',
@@ -166,307 +167,318 @@ export default function EditorClient({ eventId, slug, baseUrl, locale, t, initia
       <h1 className="ui-title">{s.hostNames || slug}</h1>
       <p className="ui-sub">{t.sub}</p>
 
-      <div className="ui-group">
-        <p className="label">{t.linkGroup}</p>
-        <div className="ui-card" style={{ marginBottom: 0 }}>
-          <a className="ui-url" href={`/${slug}`} target="_blank" rel="noreferrer">
-            {publicUrl}
-          </a>
-          <div className="ui-actions" style={{ marginTop: 14 }}>
-            <button type="button" className="ui-btn ui-btn--glass" onClick={copy}>
-              {copied ? t.copied : t.copy}
-            </button>
-            <QrPanel url={publicUrl} t={t} fileName={slug} />
-          </div>
-        </div>
-      </div>
+      <div className="ui-editor">
+        <EventPreview settings={s} t={t} />
 
-      <div className="ui-group">
-        <p className="label">{t.basicGroup}</p>
-        <div className="ui-card" style={{ marginBottom: 0 }}>
-          <Text
-            label={t.names}
-            value={s.hostNames}
-            onChange={(v) => set({ hostNames: v })}
-            placeholder="Kika a Miro"
-            max={80}
-          />
-
-          <Field
-            label={t.date}
-            hint={
-              customDate
-                ? t.dateHintCustom
-                : s.dateISO
-                  ? longDate(s.dateISO, locale)
-                  : t.dateHintEmpty
-            }
-          >
-            {customDate ? (
-              <input
-                className="ui-input"
-                type="text"
-                value={s.dateText}
-                onChange={(e) => set({ dateText: e.target.value })}
-                placeholder={locale === 'sk' ? 'leto 2026' : 'summer 2026'}
-                maxLength={40}
-              />
-            ) : (
-              <input
-                className="ui-input"
-                type="date"
-                value={s.dateISO}
-                onChange={(e) => set({ dateISO: e.target.value })}
-              />
-            )}
-            <button
-              type="button"
-              className="ui-btn ui-btn--plain"
-              style={{ paddingLeft: 0, marginTop: 2 }}
-              onClick={() => {
-                const next = !customDate;
-                setCustomDate(next);
-                set(next ? {} : { dateText: '' });
-              }}
-            >
-              {customDate ? t.dateToPicker : t.dateToText}
-            </button>
-          </Field>
-
-          <div className="ui-two">
-            <Text
-              label={t.eyebrow}
-              value={s.eyebrow}
-              onChange={(v) => set({ eyebrow: v })}
-              max={60}
-            />
-            <Text
-              label={t.headline}
-              value={s.headline}
-              onChange={(v) => set({ headline: v })}
-              max={60}
-            />
-          </div>
-
-          <Text label={t.lead} value={s.lead} onChange={(v) => set({ lead: v })} max={200} />
-          <Text
-            label={t.thanks}
-            value={s.thanks}
-            onChange={(v) => set({ thanks: v })}
-            hint={t.thanksHint}
-            max={60}
-          />
-        </div>
-      </div>
-
-      <div className="ui-group">
-        <p className="label">{t.lookGroup}</p>
-        <div className="ui-card" style={{ marginBottom: 0 }}>
-          <Field label={t.theme}>
-            <div className="ui-themes">
-              {Object.entries(THEMES).map(([key, theme]) => (
-                <button
-                  key={key}
-                  type="button"
-                  className="ui-theme"
-                  data-on={s.theme === key}
-                  onClick={() => set({ theme: key })}
-                >
-                  <span className="swatch" style={{ background: theme.vars['--paper'] }}>
-                    <span className="dot" style={{ background: theme.vars['--accent'] }} />
-                  </span>
-                  <span className="name">{theme.label[locale] ?? theme.label.sk}</span>
+        <div className="form">
+          <div className="ui-group">
+            <p className="label">{t.linkGroup}</p>
+            <div className="ui-card" style={{ marginBottom: 0 }}>
+              <a className="ui-url" href={`/${slug}`} target="_blank" rel="noreferrer">
+                {publicUrl}
+              </a>
+              <div className="ui-actions" style={{ marginTop: 14 }}>
+                <button type="button" className="ui-btn ui-btn--glass" onClick={copy}>
+                  {copied ? t.copied : t.copy}
                 </button>
-              ))}
+                <QrPanel url={publicUrl} t={t} fileName={slug} />
+              </div>
             </div>
-          </Field>
+          </div>
 
-          <Field label={t.accent} hint={s.accent ? t.accentHintCustom : t.accentHintTheme}>
-            <div className="ui-colors">
-              <button
-                type="button"
-                className="ui-color"
-                data-on={!s.accent}
-                style={{ background: themeAccent }}
-                onClick={() => set({ accent: '' })}
-                aria-label={t.accentHintTheme}
+          <div className="ui-group">
+            <p className="label">{t.basicGroup}</p>
+            <div className="ui-card" style={{ marginBottom: 0 }}>
+              <Text
+                label={t.names}
+                value={s.hostNames}
+                onChange={(v) => set({ hostNames: v })}
+                placeholder="Kika a Miro"
+                max={80}
               />
-              {ACCENTS.map((hex) => (
+
+              <Field
+                label={t.date}
+                hint={
+                  customDate
+                    ? t.dateHintCustom
+                    : s.dateISO
+                      ? longDate(s.dateISO, locale)
+                      : t.dateHintEmpty
+                }
+              >
+                {customDate ? (
+                  <input
+                    className="ui-input"
+                    type="text"
+                    value={s.dateText}
+                    onChange={(e) => set({ dateText: e.target.value })}
+                    placeholder={locale === 'sk' ? 'leto 2026' : 'summer 2026'}
+                    maxLength={40}
+                  />
+                ) : (
+                  <input
+                    className="ui-input"
+                    type="date"
+                    value={s.dateISO}
+                    onChange={(e) => set({ dateISO: e.target.value })}
+                  />
+                )}
                 <button
-                  key={hex}
                   type="button"
-                  className="ui-color"
-                  data-on={s.accent?.toLowerCase() === hex}
-                  style={{ background: hex }}
-                  onClick={() => set({ accent: hex })}
-                  aria-label={hex}
+                  className="ui-btn ui-btn--plain"
+                  style={{ paddingLeft: 0, marginTop: 2 }}
+                  onClick={() => {
+                    const next = !customDate;
+                    setCustomDate(next);
+                    set(next ? {} : { dateText: '' });
+                  }}
+                >
+                  {customDate ? t.dateToPicker : t.dateToText}
+                </button>
+              </Field>
+
+              <div className="ui-two">
+                <Text
+                  label={t.eyebrow}
+                  value={s.eyebrow}
+                  onChange={(v) => set({ eyebrow: v })}
+                  max={60}
                 />
-              ))}
-              <input
-                type="color"
-                className="ui-color ui-color--custom"
-                value={activeAccent}
-                onChange={(e) => set({ accent: e.target.value })}
-                aria-label={t.accent}
+                <Text
+                  label={t.headline}
+                  value={s.headline}
+                  onChange={(v) => set({ headline: v })}
+                  max={60}
+                />
+              </div>
+
+              <Text label={t.lead} value={s.lead} onChange={(v) => set({ lead: v })} max={200} />
+              <Text
+                label={t.thanks}
+                value={s.thanks}
+                onChange={(v) => set({ thanks: v })}
+                hint={t.thanksHint}
+                max={60}
               />
             </div>
-          </Field>
+          </div>
 
-          <Field label={t.font}>
-            <div className="ui-seg">
-              {Object.entries(FONTS).map(([key, font]) => (
-                <button
-                  key={key}
-                  type="button"
-                  data-on={s.fonts === key}
-                  onClick={() => set({ fonts: key })}
-                >
-                  {font.label[locale] ?? font.label.sk}
-                </button>
-              ))}
+          <div className="ui-group">
+            <p className="label">{t.lookGroup}</p>
+            <div className="ui-card" style={{ marginBottom: 0 }}>
+              <Field label={t.theme}>
+                <div className="ui-themes">
+                  {Object.entries(THEMES).map(([key, theme]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      className="ui-theme"
+                      data-on={s.theme === key}
+                      onClick={() => set({ theme: key })}
+                    >
+                      <span className="swatch" style={{ background: theme.vars['--paper'] }}>
+                        <span className="dot" style={{ background: theme.vars['--accent'] }} />
+                      </span>
+                      <span className="name">{theme.label[locale] ?? theme.label.sk}</span>
+                    </button>
+                  ))}
+                </div>
+              </Field>
+
+              <Field label={t.accent} hint={s.accent ? t.accentHintCustom : t.accentHintTheme}>
+                <div className="ui-colors">
+                  <button
+                    type="button"
+                    className="ui-color"
+                    data-on={!s.accent}
+                    style={{ background: themeAccent }}
+                    onClick={() => set({ accent: '' })}
+                    aria-label={t.accentHintTheme}
+                  />
+                  {ACCENTS.map((hex) => (
+                    <button
+                      key={hex}
+                      type="button"
+                      className="ui-color"
+                      data-on={s.accent?.toLowerCase() === hex}
+                      style={{ background: hex }}
+                      onClick={() => set({ accent: hex })}
+                      aria-label={hex}
+                    />
+                  ))}
+                  <input
+                    type="color"
+                    className="ui-color ui-color--custom"
+                    value={activeAccent}
+                    onChange={(e) => set({ accent: e.target.value })}
+                    aria-label={t.accent}
+                  />
+                </div>
+              </Field>
+
+              <Field label={t.font}>
+                <div className="ui-seg">
+                  {Object.entries(FONTS).map(([key, font]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      data-on={s.fonts === key}
+                      onClick={() => set({ fonts: key })}
+                    >
+                      {font.label[locale] ?? font.label.sk}
+                    </button>
+                  ))}
+                </div>
+              </Field>
             </div>
-          </Field>
-        </div>
 
-        <div className="ui-list" style={{ marginTop: 12 }}>
-          <SwitchRow
-            checked={s.ornaments}
-            onChange={(v) => set({ ornaments: v })}
-            title={t.ornaments}
-            desc={t.ornamentsDesc}
-          />
-        </div>
-      </div>
-
-      <div className="ui-group">
-        <p className="label">{t.missionsGroup}</p>
-        <div className="ui-card" style={{ marginBottom: 0 }}>
-          <Text
-            label={t.missionsTitle}
-            value={s.missionsTitle}
-            onChange={(v) => set({ missionsTitle: v })}
-            max={80}
-          />
-
-          {s.missions.map((m, i) => (
-            <div className="ui-mission" key={i}>
-              <input
-                className="ui-input"
-                value={m}
-                onChange={(e) => editMission(i, e.target.value)}
-                maxLength={160}
+            <div className="ui-list" style={{ marginTop: 12 }}>
+              <SwitchRow
+                checked={s.ornaments}
+                onChange={(v) => set({ ornaments: v })}
+                title={t.ornaments}
+                desc={t.ornamentsDesc}
               />
+            </div>
+          </div>
+
+          <div className="ui-group">
+            <p className="label">{t.missionsGroup}</p>
+            <div className="ui-card" style={{ marginBottom: 0 }}>
+              <Text
+                label={t.missionsTitle}
+                value={s.missionsTitle}
+                onChange={(v) => set({ missionsTitle: v })}
+                max={80}
+              />
+
+              {s.missions.map((m, i) => (
+                <div className="ui-mission" key={i}>
+                  <input
+                    className="ui-input"
+                    value={m}
+                    onChange={(e) => editMission(i, e.target.value)}
+                    maxLength={160}
+                  />
+                  <button
+                    type="button"
+                    className="ui-btn ui-btn--icon"
+                    onClick={() => moveMission(i, -1)}
+                    aria-label={t.up}
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    className="ui-btn ui-btn--icon"
+                    onClick={() => moveMission(i, 1)}
+                    aria-label={t.down}
+                  >
+                    ↓
+                  </button>
+                  <button
+                    type="button"
+                    className="ui-btn ui-btn--icon"
+                    onClick={() => set({ missions: s.missions.filter((_, k) => k !== i) })}
+                    aria-label={t.remove}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+
               <button
                 type="button"
-                className="ui-btn ui-btn--icon"
-                onClick={() => moveMission(i, -1)}
-                aria-label={t.up}
+                className="ui-btn ui-btn--glass"
+                onClick={() => set({ missions: [...s.missions, ''] })}
+                disabled={s.missions.length >= 30}
               >
-                ↑
+                {t.addMission}
               </button>
+
+              <div style={{ marginTop: 18 }}>
+                <Text
+                  label={t.missionsClosing}
+                  value={s.missionsClosing}
+                  onChange={(v) => set({ missionsClosing: v })}
+                  hint={t.missionsClosingHint}
+                  max={120}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="ui-group">
+            <p className="label">{t.optionsGroup}</p>
+            <div className="ui-list">
+              <SwitchRow
+                checked={s.galleryEnabled}
+                onChange={(v) => set({ galleryEnabled: v })}
+                title={t.gallery}
+                desc={t.galleryDesc}
+              />
+              <SwitchRow
+                checked={s.slideshowEnabled}
+                onChange={(v) => set({ slideshowEnabled: v })}
+                title={t.slideshow}
+                desc={t.slideshowDesc}
+              />
+              <SwitchRow
+                checked={s.allowVideo}
+                onChange={(v) => set({ allowVideo: v })}
+                title={t.video}
+                desc={t.videoDesc}
+              />
+              <SwitchRow
+                checked={s.requireName}
+                onChange={(v) => set({ requireName: v })}
+                title={t.requireName}
+                desc={t.requireNameDesc}
+              />
+            </div>
+          </div>
+
+          <div className="ui-group">
+            <p className="label">{t.contactGroup}</p>
+            <div className="ui-card" style={{ marginBottom: 0 }}>
+              <Text
+                label={t.contactLabel}
+                value={s.contactEmail}
+                onChange={(v) => set({ contactEmail: v })}
+                placeholder="vas@email.sk"
+                hint={t.contactHint}
+                max={120}
+              />
+            </div>
+          </div>
+
+          <div className="ui-group">
+            <p className="label">{t.dangerGroup}</p>
+            <div className="ui-card" style={{ marginBottom: 0 }}>
+              <p className="ui-hint" style={{ margin: '0 0 14px' }}>
+                {t.dangerNote}
+              </p>
               <button
                 type="button"
-                className="ui-btn ui-btn--icon"
-                onClick={() => moveMission(i, 1)}
-                aria-label={t.down}
+                className="ui-btn ui-btn--danger"
+                onClick={remove}
+                disabled={busy}
               >
-                ↓
-              </button>
-              <button
-                type="button"
-                className="ui-btn ui-btn--icon"
-                onClick={() => set({ missions: s.missions.filter((_, k) => k !== i) })}
-                aria-label={t.remove}
-              >
-                ×
+                {t.remove_event}
               </button>
             </div>
-          ))}
+          </div>
 
-          <button
-            type="button"
-            className="ui-btn ui-btn--glass"
-            onClick={() => set({ missions: [...s.missions, ''] })}
-            disabled={s.missions.length >= 30}
-          >
-            {t.addMission}
-          </button>
+          {error && <div className="ui-alert">{error}</div>}
 
-          <div style={{ marginTop: 18 }}>
-            <Text
-              label={t.missionsClosing}
-              value={s.missionsClosing}
-              onChange={(v) => set({ missionsClosing: v })}
-              hint={t.missionsClosingHint}
-              max={120}
-            />
+          <div className="ui-save">
+            <button className="ui-btn" onClick={save} disabled={busy}>
+              {busy ? t.saving : t.save}
+            </button>
+            {saved && <span className="ui-saved">{t.saved}</span>}
           </div>
         </div>
-      </div>
-
-      <div className="ui-group">
-        <p className="label">{t.optionsGroup}</p>
-        <div className="ui-list">
-          <SwitchRow
-            checked={s.galleryEnabled}
-            onChange={(v) => set({ galleryEnabled: v })}
-            title={t.gallery}
-            desc={t.galleryDesc}
-          />
-          <SwitchRow
-            checked={s.slideshowEnabled}
-            onChange={(v) => set({ slideshowEnabled: v })}
-            title={t.slideshow}
-            desc={t.slideshowDesc}
-          />
-          <SwitchRow
-            checked={s.allowVideo}
-            onChange={(v) => set({ allowVideo: v })}
-            title={t.video}
-            desc={t.videoDesc}
-          />
-          <SwitchRow
-            checked={s.requireName}
-            onChange={(v) => set({ requireName: v })}
-            title={t.requireName}
-            desc={t.requireNameDesc}
-          />
-        </div>
-      </div>
-
-      <div className="ui-group">
-        <p className="label">{t.contactGroup}</p>
-        <div className="ui-card" style={{ marginBottom: 0 }}>
-          <Text
-            label={t.contactLabel}
-            value={s.contactEmail}
-            onChange={(v) => set({ contactEmail: v })}
-            placeholder="vas@email.sk"
-            hint={t.contactHint}
-            max={120}
-          />
-        </div>
-      </div>
-
-      <div className="ui-group">
-        <p className="label">{t.dangerGroup}</p>
-        <div className="ui-card" style={{ marginBottom: 0 }}>
-          <p className="ui-hint" style={{ margin: '0 0 14px' }}>
-            {t.dangerNote}
-          </p>
-          <button type="button" className="ui-btn ui-btn--danger" onClick={remove} disabled={busy}>
-            {t.remove_event}
-          </button>
-        </div>
-      </div>
-
-      {error && <div className="ui-alert">{error}</div>}
-
-      <div className="ui-save">
-        <button className="ui-btn" onClick={save} disabled={busy}>
-          {busy ? t.saving : t.save}
-        </button>
-        {saved && <span className="ui-saved">{t.saved}</span>}
       </div>
     </>
   );

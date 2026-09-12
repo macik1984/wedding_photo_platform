@@ -13,10 +13,9 @@ export const strings = {
 
     landing: {
       eyebrow: 'Fotky priamo do vášho Google Drive',
-      h1a: 'Vaši hostia robia tie najlepšie fotky.',
-      h1b: 'Teraz ich môžete dostať všetky.',
-      lead:
-        'Hostia naskenujú QR kód a fotky nahrajú priamo do vášho Google Drive. Bez aplikácie. Bez registrácie. Bez naháňania hostí po akcii.',
+      h1a: 'Vaši hostia robia najlepšie fotky.',
+      h1b: 'Teraz ich dostanete všetky.',
+      lead: 'Naskenujú QR kód a fotky pristanú priamo vo vašom Google Drive.',
       ctaPrimary: 'Začať zdarma',
       ctaSecondary: 'Ako to funguje',
       trust: ['Bez aplikácie', 'Bez registrácie hostí', 'Originálna kvalita', 'Váš Google Drive'],
@@ -27,34 +26,24 @@ export const strings = {
       problem: {
         h1: 'Viete, že tie fotky existujú.',
         h2: 'Problém je dostať sa k nim.',
-        body:
-          'Po každej svadbe, oslave alebo evente ostanú stovky fotiek v telefónoch vašich hostí. Niečo príde cez WhatsApp. Niečo cez Messenger. A veľa fotiek neuvidíte nikdy.',
+        body: 'Po každej akcii ostanú stovky fotiek v telefónoch hostí. Niečo príde cez WhatsApp, niečo cez Messenger, väčšinu neuvidíte nikdy.',
         closing: 'Paparazzi to vyrieši ešte pred začiatkom udalosti.',
       },
 
       how: {
         title: 'Jeden QR kód. To je celé.',
         steps: [
-          [
-            'Vytvorte udalosť',
-            'Prepojte Google Drive, upravte stránku udalosti a vytvorte QR kód.',
-          ],
-          [
-            'Zdieľajte QR kód',
-            'Umiestnite ho na stoly, pozvánky, obrazovku, plagát alebo kdekoľvek ho hostia uvidia.',
-          ],
-          [
-            'Hostia nahrajú fotky',
-            'Bez účtu a bez aplikácie. Naskenujú, vyberú fotky a nahrajú.',
-          ],
+          ['Vytvorte udalosť', 'Prepojte Google Drive, upravte stránku a máte QR kód.'],
+          ['Zdieľajte QR kód', 'Na stoly, pozvánky, plagát alebo obrazovku.'],
+          ['Hostia nahrajú fotky', 'Bez účtu a bez aplikácie. Naskenujú, vyberú, odošlú.'],
         ],
         after: 'Fotky sa objavia priamo vo vašom Google Drive.',
       },
 
       missions: {
+        badge: 'Čo nás odlišuje',
         title: 'Premeňte hostí na vašich paparazzi.',
-        lead:
-          'Nepýtajte si len fotky. Dajte hosťom zábavné foto úlohy a nechajte ich zachytiť momenty, ktoré by vám inak unikli.',
+        lead: 'Nepýtajte si len fotky. Dajte hosťom zábavné úlohy a zachytia momenty, ktoré by vám unikli.',
         items: [
           'Selfie s mladomanželmi',
           'Zachyť najlepší prípitok',
@@ -67,8 +56,7 @@ export const strings = {
 
       drive: {
         title: 'Vaše fotky. Váš Drive. Navždy.',
-        body:
-          'Fotky sa ukladajú priamo do priečinka vo vašom Google Drive. Nemusíte ich po udalosti sťahovať z cudzej galérie, presúvať ani riešiť, kedy album prestane fungovať.',
+        body: 'Fotky pristanú v priečinku vo vašom Google Drive. Nič nesťahujete z cudzej galérie a žiadny album vám nevyprší.',
         benefits: [
           ['☁︎', 'Vaše úložisko', 'Fotky zostávajú vo vašom Google Drive.'],
           ['◫', 'Originálne súbory', 'Fotky ostávajú v pôvodnej kvalite.'],
@@ -107,6 +95,7 @@ export const strings = {
         missionsTitle: 'Foto úlohy',
       },
 
+      footBrand: 'Paparazzi - fotky od hostí priamo do vášho Google Drive.',
       footPrivacy: 'Ochrana údajov',
       footTerms: 'Podmienky',
     },
@@ -146,6 +135,15 @@ export const strings = {
     editor: {
       back: 'Moje akcie',
       sub: 'Zmeny sa prejavia hneď po uložení.',
+
+      previewLabel: 'Náhľad pre hostí',
+      previewTabUpload: 'Odosielanie',
+      previewTabMissions: 'Úlohy',
+      previewName: 'Vaše meno',
+      previewPick: 'Vybrať fotky',
+      previewSend: 'Odoslať',
+      previewNote:
+        'Stránka pre hostí má vlastný vzhľad, nie vzhľad administrácie. Mení sa počas písania, ukladať netreba.',
 
       linkGroup: 'Adresa pre hostí',
       copy: 'Skopírovať odkaz',
@@ -198,8 +196,7 @@ export const strings = {
 
       contactGroup: 'Kontakt',
       contactLabel: 'E-mail na stránkach o ochrane údajov',
-      contactHint:
-        'Sem sa môžu hostia obrátiť so žiadosťou o zmazanie fotiek. Nepovinné.',
+      contactHint: 'Sem sa môžu hostia obrátiť so žiadosťou o zmazanie fotiek. Nepovinné.',
 
       dangerGroup: 'Nebezpečná zóna',
       dangerNote:
@@ -216,8 +213,7 @@ export const strings = {
 
     notFound: {
       title: 'Táto stránka tu nie je',
-      body:
-        'Adresa akcie možno zanikla, alebo je v nej preklep. Skontrolujte odkaz na kartičke alebo sa opýtajte organizátora.',
+      body: 'Adresa akcie možno zanikla, alebo je v nej preklep. Skontrolujte odkaz na kartičke alebo sa opýtajte organizátora.',
       home: 'Na úvod',
     },
 
@@ -297,8 +293,7 @@ export const strings = {
       eyebrow: 'Straight into your own Google Drive',
       h1a: 'Your guests take the photos.',
       h1b: 'You get every one.',
-      lead:
-        'Guests scan a QR code and upload photos straight to your Google Drive. No app. No registration. No chasing people afterwards.',
+      lead: 'Guests scan a QR code and their photos land straight in your Google Drive.',
       ctaPrimary: 'Start free',
       ctaSecondary: 'See how it works',
       trust: ['No app', 'No guest registration', 'Original quality', 'Your Google Drive'],
@@ -309,31 +304,24 @@ export const strings = {
       problem: {
         h1: 'You know the photos exist.',
         h2: 'Getting them is the hard part.',
-        body:
-          'After every wedding, party or event, hundreds of photos stay on your guests phones. Some arrive through WhatsApp. Some through Messenger. Some never arrive at all.',
+        body: 'After every event, hundreds of photos stay on your guests phones. Some arrive through WhatsApp, some through Messenger, most never arrive at all.',
         closing: 'Paparazzi fixes that before the event even starts.',
       },
 
       how: {
         title: 'One QR code. That is it.',
         steps: [
-          [
-            'Create your event',
-            'Connect your Google Drive, customize your event page and generate your QR code.',
-          ],
-          [
-            'Share the QR code',
-            'Put it on tables, invitations, screens, posters or anywhere your guests can see it.',
-          ],
-          ['Guests upload', 'No account. No app. They simply scan, choose photos and upload.'],
+          ['Create your event', 'Connect your Drive, customize the page, get your QR code.'],
+          ['Share the QR code', 'On tables, invitations, posters or a screen.'],
+          ['Guests upload', 'No account. No app. They scan, choose photos and send.'],
         ],
         after: 'Photos appear directly in your Google Drive.',
       },
 
       missions: {
+        badge: 'What makes it different',
         title: 'Turn your guests into your paparazzi.',
-        lead:
-          'Do not just ask for photos. Give guests fun missions and inspire them to capture moments you would otherwise miss.',
+        lead: 'Do not just ask for photos. Give guests fun missions and they capture moments you would otherwise miss.',
         items: [
           'Take a selfie with the bride & groom',
           'Capture the best toast',
@@ -346,8 +334,7 @@ export const strings = {
 
       drive: {
         title: 'Your photos. Your Drive. Forever.',
-        body:
-          'Photos go directly into a folder in your own Google Drive. You do not need to download your gallery later, move files somewhere else or worry about your event album expiring.',
+        body: 'Photos go straight into a folder in your own Google Drive. Nothing to download from someone else, no album that expires.',
         benefits: [
           ['☁︎', 'Your storage', 'Photos live in your Google Drive.'],
           ['◫', 'Original files', 'Keep the photos in their original quality.'],
@@ -386,6 +373,7 @@ export const strings = {
         missionsTitle: 'Photo missions',
       },
 
+      footBrand: 'Paparazzi - guest photos straight into your Google Drive.',
       footPrivacy: 'Privacy',
       footTerms: 'Terms',
     },
@@ -425,6 +413,15 @@ export const strings = {
     editor: {
       back: 'My events',
       sub: 'Changes go live as soon as you save.',
+
+      previewLabel: 'Guest preview',
+      previewTabUpload: 'Upload',
+      previewTabMissions: 'Missions',
+      previewName: 'Your name',
+      previewPick: 'Choose photos',
+      previewSend: 'Send',
+      previewNote:
+        'The guest page has a look of its own, not the look of this admin. It updates as you type, no need to save.',
 
       linkGroup: 'Address for guests',
       copy: 'Copy link',
@@ -494,8 +491,7 @@ export const strings = {
 
     notFound: {
       title: 'This page is not here',
-      body:
-        'The event address may be gone, or there is a typo in it. Check the link on the card or ask the organiser.',
+      body: 'The event address may be gone, or there is a typo in it. Check the link on the card or ask the organiser.',
       home: 'Go to start',
     },
 

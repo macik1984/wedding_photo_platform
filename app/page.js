@@ -20,11 +20,7 @@ function TrustLine({ items }) {
 }
 
 export default async function Landing({ searchParams }) {
-  const [user, locale, params] = await Promise.all([
-    currentUser(),
-    resolveLocale(),
-    searchParams,
-  ]);
+  const [user, locale, params] = await Promise.all([currentUser(), resolveLocale(), searchParams]);
   const t = tx(locale);
   const L = t.landing;
   const error = params?.error;
@@ -45,9 +41,15 @@ export default async function Landing({ searchParams }) {
                 {t.nav.myEvents}
               </Link>
             ) : (
-              <a className="ui-btn ui-btn--glass" href="/api/auth/google/start">
-                {t.nav.signIn}
-              </a>
+              <>
+                {/* kto uz ucet ma, hlada prihlasenie; kto nie, potrebuje vidiet vyzvu */}
+                <a className="ui-btn ui-btn--plain ui-wide-only" href="/api/auth/google/start">
+                  {t.nav.signIn}
+                </a>
+                <a className="ui-btn" href="/api/auth/google/start">
+                  {L.ctaPrimary}
+                </a>
+              </>
             )}
           </div>
         </div>
@@ -61,9 +63,9 @@ export default async function Landing({ searchParams }) {
             {L.eyebrow}
           </span>
 
+          {/* kazdy riadok vlastny blok, aby si zalamovanie vyvazil sam */}
           <h1>
-            {L.h1a}
-            <br />
+            <span>{L.h1a}</span>
             <span className="grad">{L.h1b}</span>
           </h1>
 
@@ -110,10 +112,11 @@ export default async function Landing({ searchParams }) {
         {/* 2 - problem */}
         <section className="ui-section">
           <div className="ui-problem">
+            {/* prechod drzia hlavicka a zaverecna vyzva; tu by uz bol len hluk */}
             <h2>
               {L.problem.h1}
               <br />
-              <span className="grad">{L.problem.h2}</span>
+              {L.problem.h2}
             </h2>
             <p>{L.problem.body}</p>
             <p className="closing">{L.problem.closing}</p>
@@ -137,6 +140,7 @@ export default async function Landing({ searchParams }) {
 
         {/* 4 - foto ulohy */}
         <section className="ui-section">
+          <p className="ui-badge">{L.missions.badge}</p>
           <h2>{L.missions.title}</h2>
           <p className="intro">{L.missions.lead}</p>
 
@@ -196,8 +200,7 @@ export default async function Landing({ searchParams }) {
         {/* 7 - záverečná výzva */}
         <section className="ui-final">
           <h2>
-            {L.final.h1}
-            <br />
+            <span>{L.final.h1}</span>
             <span className="grad">{L.final.h2}</span>
           </h2>
           <a className="ui-btn ui-btn--big" href="/api/auth/google/start">
@@ -206,11 +209,14 @@ export default async function Landing({ searchParams }) {
           <TrustLine items={L.final.trust} />
         </section>
 
-        <p className="ui-foot">
-          <Link href="/privacy">{L.footPrivacy}</Link>
-          {' · '}
-          <Link href="/terms">{L.footTerms}</Link>
-        </p>
+        <footer className="ui-foot">
+          <p className="brand">{L.footBrand}</p>
+          <p>
+            <Link href="/privacy">{L.footPrivacy}</Link>
+            {' · '}
+            <Link href="/terms">{L.footTerms}</Link>
+          </p>
+        </footer>
       </main>
     </div>
   );

@@ -41,6 +41,11 @@ dvojíc. Botanické ozdoby zapnúť alebo vypnúť. Celý zoznam úloh foto misi
 vrátane poradia. A prepínače: galéria, premietanie, prijímanie videí,
 vyžadovanie mena.
 
+Vedľa nastavení beží náhľad telefónu s tým, čo uvidí hosť. Kreslí sa
+z rozpracovaných hodnôt, takže farbu, písmo aj texty vidno hneď pri písaní
+a netreba nič ukladať ani otvárať adresu akcie. Na úzkom displeji je náhľad
+zložený pod nadpisom „Náhľad pre hostí".
+
 QR kód je priamo v nastaveniach akcie, aj s tlačidlom na stiahnutie PNG
 v rozlíšení 1200 px na tlač. Generuje sa v prehliadači, takže adresa akcie
 neodchádza na cudzí server.

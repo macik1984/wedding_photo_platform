@@ -32,7 +32,7 @@ export default async function EditorPage({ params }) {
     <div className="ui">
       <Backdrop />
       <TopBar user={user} t={t} />
-      <main className="ui-page ui-page--narrow">
+      <main className="ui-page ui-page--editor">
         <EditorClient
           eventId={event.id}
           slug={event.slug}

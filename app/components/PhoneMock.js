@@ -6,24 +6,27 @@ import CameraIcon from './CameraIcon';
  *
  * variant="upload"   - odosielacia obrazovka
  * variant="missions" - ten isty ram so zoznamom foto uloh
+ *
+ * `vars` prepisuje farby a pisma obrazovky (pouziva nahlad v administracii);
+ * bez neho sa kresli predvolena papierova tema.
  */
-export default function PhoneMock({ t, missions = [], variant = 'upload' }) {
+export default function PhoneMock({ t, missions = [], variant = 'upload', vars }) {
   return (
     <div className="ui-phone">
-      <div className="screen">
+      <div className="screen" style={vars}>
         <div className="island" />
-        <p className="eyebrow">{t.eyebrow}</p>
-        <p className="names">{t.names}</p>
+        {t.eyebrow && <p className="eyebrow">{t.eyebrow}</p>}
+        {t.names && <p className="names">{t.names}</p>}
         <div className="rule" />
-        <p className="kicker">{t.kicker}</p>
-        <p className="sub">{t.sub}</p>
+        {t.kicker && <p className="kicker">{t.kicker}</p>}
+        {t.sub && <p className="sub">{t.sub}</p>}
 
         {variant === 'missions' ? (
           <div className="panel">
             <p className="lbl">{t.missionsTitle}</p>
             <ul className="tasks">
               {missions.slice(0, 5).map((m, i) => (
-                <li key={m}>
+                <li key={`${m}-${i}`}>
                   <span className="tick" data-on={i < 2} aria-hidden="true" />
                   <span>{m}</span>
                 </li>
